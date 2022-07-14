@@ -64,6 +64,7 @@ def stats(update, context):
     sendMessage(stats, context.bot, update.message)
 
 def start(update, context):
+    buttons = ButtonMaker()
     buttons.buildbutton("😺 LOVE U 😺", "https://t.me/INDIA")
     reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
