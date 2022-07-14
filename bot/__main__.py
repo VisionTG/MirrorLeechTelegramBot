@@ -64,9 +64,24 @@ def stats(update, context):
     sendMessage(stats, context.bot, update.message)
 
 def start(update, context):
+    buttons.buildbutton("😺 LOVE U 😺", "https://t.me/INDIA")
+    reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
-        start_string = f'Hey Bro What's up? 😉'
-        sendMessage(start_string, context.bot, update.message)
+        start_string = f'''
+-𝐈 𝐤𝐧𝐨𝐰 𝐲𝐨𝐮. 𝐁𝐮𝐭 𝐧𝐨, 𝐈 𝐰𝐨𝐧’𝐭 𝐭𝐞𝐥𝐥 𝐲𝐨𝐮.
+
+-𝐈 𝐜𝐚𝐧 𝐟𝐞𝐞𝐥 𝐲𝐨𝐮𝐫 𝐡𝐞𝐚𝐫𝐭𝐛𝐫𝐞𝐚𝐤. 𝐁𝐮𝐭 𝐈 𝐰𝐨𝐧’𝐭 𝐭𝐞𝐥𝐥 𝐲𝐨𝐮.
+
+-𝐈 𝐜𝐚𝐧 𝐬𝐞𝐞 𝐲𝐨𝐮𝐫 𝐟𝐚𝐢𝐥𝐮𝐫𝐞𝐬. 𝐛𝐮𝐭 𝐈 𝐰𝐨𝐧’𝐭 𝐭𝐞𝐥𝐥 𝐲𝐨𝐮
+
+-𝐈 𝐜𝐚𝐧 𝐬𝐞𝐧𝐬𝐞 𝐲𝐨𝐮𝐫 𝐝𝐞𝐚𝐭𝐡. 𝐁𝐮𝐭 𝐧𝐨, 𝐈 𝐰𝐨𝐧’𝐭 𝐭𝐞𝐥𝐥 𝐲𝐨𝐮.
+
+★ 𝗜 𝗸𝗻𝗼𝘄 𝗲𝘃𝗲𝗿𝘆𝘁𝗵𝗶𝗻𝗴, 𝘆𝗲𝘁 𝗜 𝘄𝗼𝗻’𝘁 𝘁𝗲𝗹𝗹 𝘆𝗼𝘂. 𝗕𝗲𝗰𝗮𝘂𝘀𝗲 𝗶𝘁’𝘀 𝗯𝗲𝘆𝗼𝗻𝗱 𝘆𝗼𝘂𝗿 𝘂𝗻𝗱𝗲𝗿𝘀𝘁𝗮𝗻𝗱𝗶𝗻𝗴.
+'''
+        sendMarkup(start_string, context.bot, update.message, reply_markup)
+    else:
+        sendMarkup('ACCESS DENIED', context.bot, update.message, reply_markup)
+
 
 def restart(update, context):
     cmd = update.effective_message.text.split(' ', 1)
