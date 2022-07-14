@@ -35,7 +35,7 @@ class _BotCommands:
         self.LeechSetCommand = f'settings{CMD_INDEX}'
         self.SetThumbCommand = f'savethumbnail{CMD_INDEX}'
         self.LeechCommand = f'upload_to_tg{CMD_INDEX}'
-        self.UnzipLeechCommand = f'extrcat_leech{CMD_INDEX}'
+        self.UnzipLeechCommand = f'extract_leech{CMD_INDEX}'
         self.ZipLeechCommand = f'archive_leech{CMD_INDEX}'
         self.QbLeechCommand = f'qb_leech{CMD_INDEX}'
         self.QbUnzipLeechCommand = f'qb_extract_leech{CMD_INDEX}'
