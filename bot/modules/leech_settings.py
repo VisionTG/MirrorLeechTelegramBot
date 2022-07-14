@@ -23,26 +23,26 @@ def getleechinfo(from_user):
         and AS_DOCUMENT
     ):
         ltype = "DOCUMENT"
-        buttons.sbutton("Send As Media", f"leechset {user_id} med")
+        buttons.sbutton("Send As Media 🎦", f"leechset {user_id} med")
     else:
         ltype = "MEDIA"
-        buttons.sbutton("Send As Document", f"leechset {user_id} doc")
+        buttons.sbutton("Send As Document 📄", f"leechset {user_id} doc")
 
     if ospath.exists(thumbpath):
         thumbmsg = "Exists"
-        buttons.sbutton("Delete Thumbnail", f"leechset {user_id} thumb")
-        buttons.sbutton("Show Thumbnail", f"leechset {user_id} showthumb")
+        buttons.sbutton("Delete Thumbnail 🗑️", f"leechset {user_id} thumb")
+        buttons.sbutton("Show Thumbnail 🖼️", f"leechset {user_id} showthumb")
     else:
         thumbmsg = "Not Exists"
 
     if AUTO_DELETE_MESSAGE_DURATION == -1:
-        buttons.sbutton("Close", f"leechset {user_id} close")
+        buttons.sbutton("Close ⚔️", f"leechset {user_id} close")
 
     button = InlineKeyboardMarkup(buttons.build_menu(1))
 
-    text = f"<u>Leech Settings for <a href='tg://user?id={user_id}'>{name}</a></u>\n"\
-           f"Leech Type <b>{ltype}</b>\n"\
-           f"Custom Thumbnail <b>{thumbmsg}</b>"
+    text = f"<b> 🥷 Leech Settings for: <u><a href='tg://user?id={user_id}'>{name}</a></u></b>\n\n"\
+           f"★ <b>Current Mod: <u>{ltype}</u></b>\n"\
+           f"★ <b>Custom Thumbnail: <u>{thumbmsg}</u></b>"
     return text, button
 
 def editLeechType(message, query):
