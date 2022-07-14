@@ -65,7 +65,7 @@ def stats(update, context):
 
 def start(update, context):
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
-        start_string = f'Type /{BotCommands.HelpCommand} to get a list of available commands'
+        start_string = f'Hey Bro What's up? 😉'
         sendMessage(start_string, context.bot, update.message)
 
 def restart(update, context):
@@ -198,21 +198,7 @@ help = telegraph.create_page(
     )["path"]
 
 help_string = f'''
-/{BotCommands.PingCommand}: Check how long it takes to Ping the Bot
-
-/{BotCommands.AuthorizeCommand}: Authorize a chat or a user to use the bot (Can only be invoked by Owner & Sudo of the bot)
-
-/{BotCommands.UnAuthorizeCommand}: Unauthorize a chat or a user to use the bot (Can only be invoked by Owner & Sudo of the bot)
-
-/{BotCommands.AuthorizedUsersCommand}: Show authorized users (Only Owner & Sudo)
-
-/{BotCommands.AddSudoCommand}: Add sudo user (Only Owner)
-
-/{BotCommands.RmSudoCommand}: Remove sudo users (Only Owner)
-
-/{BotCommands.RestartCommand}: Restart and update the bot. kill dyno: /restart k do dyno restart: /restart d
-
-/{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
+Click Help Button to get all COMMANDS 
 '''
 
 def bot_help(update, context):
