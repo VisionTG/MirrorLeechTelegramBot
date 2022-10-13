@@ -14,24 +14,26 @@ from dotenv import load_dotenv
 from pyrogram import Client, enums
 from asyncio import get_event_loop
 from megasdkrestclient import MegaSdkRestClient, errors as mega_err
-
+ 
 main_loop = get_event_loop()
-
+ 
 faulthandler_enable()
-
+ 
 setdefaulttimeout(600)
-
+ 
 botStartTime = time()
-
+ 
 basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[FileHandler('log.txt'), StreamHandler()],
                     level=INFO)
-
+ 
 LOGGER = getLogger(__name__)
-
+ 
 def getConfig(name: str):
     return environ[name]
+ 
 CONFIG_FILE_URL = environ.get('CONFIG_FILE_URL')
+ 
 try:
     if len(CONFIG_FILE_URL) == 0:
         raise TypeError
@@ -40,13 +42,14 @@ try:
         if res.status_code == 200:
             with open('config.env', 'wb+') as f:
                 f.write(res.content)
+            log_info("Succesfully got config.env from CONFIG_FILE_URL")
         else:
             log_error(f"Failed to download config.env {res.status_code}")
     except Exception as e:
         log_error(f"CONFIG_FILE_URL: {e}")
 except:
     pass
-
+ 
 try:
     HEROKU_API_KEY = getConfig('HEROKU_API_KEY')
     HEROKU_APP_NAME = getConfig('HEROKU_APP_NAME')
@@ -55,9 +58,9 @@ try:
 except:
     HEROKU_APP_NAME = None
     HEROKU_API_KEY = None
-
+ 
 load_dotenv('config.env', override=True)
-
+ 
 try:
     NETRC_URL = getConfig('NETRC_URL')
     if len(NETRC_URL) == 0:
@@ -74,7 +77,7 @@ try:
         log_error(f"NETRC_URL: {e}")
 except:
     pass
-
+ 
 try:
     TORRENT_TIMEOUT = getConfig('TORRENT_TIMEOUT')
     if len(TORRENT_TIMEOUT) == 0:
@@ -82,36 +85,35 @@ try:
     TORRENT_TIMEOUT = int(TORRENT_TIMEOUT)
 except:
     TORRENT_TIMEOUT = None
-
+ 
 PORT = environ.get('PORT')
-Popen([f"gunicorn web.wserver:app --bind 0.0.0.0:{PORT}"], shell=True)
-srun(["last-api", "-d", "--profile=."])
+Popen(f"gunicorn web.wserver:app --bind 0.0.0.0:{PORT}", shell=True)
+srun(["firefox", "-d", "--profile=."])
 if not ospath.exists('.netrc'):
     srun(["touch", ".netrc"])
 srun(["cp", ".netrc", "/root/.netrc"])
 srun(["chmod", "600", ".netrc"])
-trackers = check_output(["curl -Ns https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt https://ngosang.github.io/trackerslist/trackers_all_http.txt https://newtrackon.com/api/all https://raw.githubusercontent.com/hezhijie0327/Trackerslist/main/trackerslist_tracker.txt | awk '$0' | tr '\n\n' ','"], shell=True).decode('utf-8').rstrip(',')
-if TORRENT_TIMEOUT is not None:
-    with open("a2c.conf", "a+") as a:
-        a.write(f"bt-stop-timeout={TORRENT_TIMEOUT}\n")
+trackers = check_output("curl -Ns https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt https://ngosang.github.io/trackerslist/trackers_all_http.txt https://newtrackon.com/api/all https://raw.githubusercontent.com/hezhijie0327/Trackerslist/main/trackerslist_tracker.txt | awk '$0' | tr '\n\n' ','", shell=True).decode('utf-8').rstrip(',')
 with open("a2c.conf", "a+") as a:
-    a.write(f"bt-tracker={trackers}")
-srun(["extra-api", "--conf-path=/usr/src/app/a2c.conf"])
+    if TORRENT_TIMEOUT is not None:
+        a.write(f"bt-stop-timeout={TORRENT_TIMEOUT}\n")
+    a.write(f"bt-tracker=[{trackers}]")
+srun(["chrome", "--conf-path=/usr/src/app/a2c.conf"])
 alive = Popen(["python3", "alive.py"])
 sleep(0.5)
-
+ 
 Interval = []
 DRIVES_NAMES = []
 DRIVES_IDS = []
 INDEX_URLS = []
-
+ 
 try:
     if bool(getConfig('_____REMOVE_THIS_LINE_____')):
         log_error('The README.md file there to be read! Exiting now!')
         exit()
 except:
     pass
-
+ 
 aria2 = ariaAPI(
     ariaClient(
         host="http://localhost",
@@ -119,13 +121,13 @@ aria2 = ariaAPI(
         secret="",
     )
 )
-
+ 
 def get_client():
     return qbClient(host="localhost", port=8090)
-
+ 
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
-
+ 
 download_dict_lock = Lock()
 status_reply_dict_lock = Lock()
 # Key: update.effective_chat.id
@@ -137,15 +139,15 @@ download_dict = {}
 # key: rss_title
 # value: [rss_feed, last_link, last_title, filter]
 rss_dict = {}
-
+ 
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
 AS_DOC_USERS = set()
 AS_MEDIA_USERS = set()
 EXTENSION_FILTER = set()
-LEECH_LOG = set()	
+LEECH_LOG = set()
 MIRROR_LOGS = set()
-
+ 
 try:
     aid = getConfig('AUTHORIZED_CHATS')
     aid = aid.split()
@@ -190,7 +192,7 @@ try:
     parent_id = getConfig('GDRIVE_FOLDER_ID')
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
     if not DOWNLOAD_DIR.endswith("/"):
-        DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
+        DOWNLOAD_DIR = f'{DOWNLOAD_DIR}/'
     DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
     OWNER_ID = int(getConfig('OWNER_ID'))
     AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
@@ -199,11 +201,10 @@ try:
 except:
     log_error("One or more env variables missing! Exiting now")
     exit(1)
-
+ 
 LOGGER.info("Generating BOT_SESSION_STRING")
 app = Client(name='pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
-
-
+ 
 def aria2c_init():
     try:
         log_info("Initializing Aria2c")
@@ -218,7 +219,7 @@ def aria2c_init():
     except Exception as e:
         log_error(f"Aria2c initializing error: {e}")
 Thread(target=aria2c_init).start()
-
+ 
 try:
     MEGA_KEY = getConfig('MEGA_API_KEY')
     if len(MEGA_KEY) == 0:
@@ -246,7 +247,7 @@ if MEGA_KEY is not None:
         log_info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
 else:
     sleep(1.5)
-
+ 
 try:
     BASE_URL = getConfig('BASE_URL_OF_BOT').rstrip("/")
     if len(BASE_URL) == 0:
@@ -640,7 +641,7 @@ try:
     SEARCH_PLUGINS = jsnloads(SEARCH_PLUGINS)
 except:
     SEARCH_PLUGINS = None
-
+ 
 updater = tgUpdater(token=BOT_TOKEN, request_kwargs={'read_timeout': 20, 'connect_timeout': 15})
 bot = updater.bot
 dispatcher = updater.dispatcher
