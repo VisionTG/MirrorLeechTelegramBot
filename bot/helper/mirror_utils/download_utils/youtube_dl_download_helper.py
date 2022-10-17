@@ -179,18 +179,6 @@ class YoutubeDLHelper:
         self.extractMetaData(link, name, args)
         if self.__is_cancelled:
             return
-        if STORAGE_THRESHOLD is not None:
-            acpt = check_storage_threshold(self.size, self.__listener.isZip)
-            if not acpt:
-                msg = f'You must leave {STORAGE_THRESHOLD}GB free storage.'
-                msg += f'\nYour File/Folder size is {get_readable_file_size(self.size)}'
-                return self.__onDownloadError(msg)
-        if LEECH_LIMIT is not None:
-            acpt = check_storage_threshold(self.size, self.__listener.isZip, self.__listener.isLeech)
-            if not acpt:
-                msg = f'Leech Limit is: {LEECH_LIMIT}GB.'
-                msg += f'\nYour File/Folder size is {get_readable_file_size(self.size)}'
-                return self.__onDownloadError(msg)
         if not self.is_playlist:
             if args is None:
                 self.opts['outtmpl'] = f"{path}/{self.name}"
